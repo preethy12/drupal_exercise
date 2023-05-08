@@ -1,0 +1,5 @@
+example.admin:                                              #machine name
+  title: 'controller menu'                                  #menu name
+  description: 'controller menu created for the site'       #provides description for the created menu
+  route_name: 'preethy_exercise.hello_world'                #specifies the name of the route that the menu should link to
+  menu_name: admin                                          #where the menu should appear

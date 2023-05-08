@@ -1,0 +1,6 @@
+add_content.article:
+  route_name: "config.custom" #when the button is clicked it will take to this route.
+  title: "Config form"        #button title
+  appears_on:
+    - "preethy_exercise.custom_form" #button will be placed on this particular page.
+

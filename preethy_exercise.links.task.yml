@@ -1,0 +1,17 @@
+#creates menu tab
+preethy_exercise.custom_form:                 #machine name
+  route_name: preethy_exercise.custom_form    #directs to custom form page
+  title: 'custom page'                        #title for the menu tab
+  base_route: preethy_exercise.custom_form    #starting point for routes
+
+config.custom:                                #machine name
+  route_name: config.custom                   #directs to config form page
+  title: 'config'
+  base_route: preethy_exercise.custom_form    #starting point for routes
+
+preethy_exercise.hello_world:
+ route_name: preethy_exercise.hello_world     #directs to controller page
+ title: 'controller'
+ base_route: preethy_exercise.custom_form
+
+

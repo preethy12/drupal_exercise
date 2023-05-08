@@ -1,0 +1,40 @@
+<?php
+// update => module reinstallation not required.
+/**
+ * implements hook_schema().
+ */
+// This function creates table user_details in db.
+function preethy_exercise_schema() {
+    $schema['user_details'] = [
+        'description' => 'Stores user details',
+        'fields' => [
+            'id' => [
+                'description' => 'serial number',
+                'type' => 'serial',
+                'not null' => true
+            ],
+            'firstname' => [
+                'description' => 'Firstname of the user',
+                'type' => 'varchar',
+                'length' => 60,
+                'not null' => true,
+            ],
+            'email' => [
+                'description' => 'Email of the user',
+                'type' => 'varchar',
+                'length' => 60,
+                'not null' => true,
+            ],
+            'gender' => [
+                'description' => 'gender of the user',
+                'type' => 'varchar',
+                'length' => 60,
+                'not null' => true,
+            ],
+        ],
+        'primary key' => ['id'],
+    ];
+    return $schema;
+}
+
+

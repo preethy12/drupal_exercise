@@ -1,0 +1,5 @@
+css_lib:
+  version: 1.x
+  css:
+    theme: #CSS file  to be included in the theme
+      CSS/style.css: {}

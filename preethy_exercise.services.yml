@@ -1,0 +1,4 @@
+services:
+  custom_service:
+    class: Drupal\preethy_exercise\CustomService
+    arguments: ['@config.factory']
