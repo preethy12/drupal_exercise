@@ -3,6 +3,12 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 
+/**
+ * @file
+ * Contains preethy_exercise.module.
+ */
+
+ use Drupal\preethy_exercise\Event\UserLoginEvent;
 
 
 function preethy_exercise_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -13,6 +19,7 @@ function preethy_exercise_form_alter(&$form, FormStateInterface $form_state, $fo
       $data=\Drupal::service('custom_service')->getName();
      // print_r($data);
       //exit;
+
 
 
 }
@@ -32,3 +39,17 @@ function preethy_exercise_theme($existing, $type, $theme, $path) {
         ];
 
     }
+
+
+/**
+ * Implements hook_user_login().
+ */
+function preethy_exercise_user_login($account) {
+    // Instantiate our event.
+    $event = new UserLoginEvent($account);
+
+    // Get the event_dispatcher service and dispatch the event.
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event, UserLoginEvent::EVENT_NAME);
+  }
+
