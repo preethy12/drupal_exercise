@@ -26,7 +26,9 @@ class FieldWidget extends WidgetBase {
      */
 
      public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+     #If the value doesn't exist or is null, an empty string is assigned
         $value = isset($items[$delta]->value) ? $items[$delta]->value : "";
+     #initializes the $element variable with the existing value of $element and adds an array of settings and attributes to it. The + operator is used to merge the arrays.
         $element = $element + [
             '#type' => 'textfield',
             '#suffix' => "<span>" . $this->getFieldSetting("moreinfo") . "</span>",
@@ -42,6 +44,7 @@ class FieldWidget extends WidgetBase {
       * {@inheritdoc}
       */
       public static function defaultSettings() {
+        # returns an array of default settings for the class
         return [
             'placeholder' => 'default',
         ] + parent::defaultSettings();
