@@ -36,8 +36,8 @@ class CustomConfigEventsSubscriber implements EventSubscriberInterface {
 
     //fetching user data
     $account_created = $database->select('users_field_data', 'ud')
-      ->fields('ud', ['created'])
-      ->condition('ud.uid', $event->account->id())
+      ->fields('ud', ['created']) //returns when the account was created
+      ->condition('ud.uid', $event->account->id()) //returns user id
       ->execute()
       ->fetchField();
 

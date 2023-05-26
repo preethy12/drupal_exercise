@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\preethy_exercise\Event;
+namespace Drupal\preethy_exercise\Event; //name space for user login event
 
-use Drupal\Component\EventDispatcher\Event;
-use Drupal\user\UserInterface;
+use Drupal\Component\EventDispatcher\Event; // base class
+use Drupal\user\UserInterface; //used to get user details
 
 /**
  * Event that is fired when a user logs in.
@@ -27,7 +27,7 @@ class UserLoginEvent extends Event {
    *   The account of the user logged in.
    */
   public function __construct(UserInterface $account) {
-    $this->account = $account;
+    $this->account = $account; //returns user account
   }
 
 }

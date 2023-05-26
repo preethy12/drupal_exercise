@@ -20,8 +20,11 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 
+//annotation forFieldFormatter
+
 
 class FieldFormatter extends FormatterBase {
+    //  it sets the 'concat' setting to 'Concat with ' as the default value. It merges these settings with the default settings of the parent class.
 
     /**
      * {@inheritdoc}
@@ -38,9 +41,10 @@ class FieldFormatter extends FormatterBase {
 
     public function settingsForm(array $form, FormStateInterface $form_state) {
         $form['concat'] =[
-            '#type' => 'textfield',
+            '#type' => 'textfield',//creates the text field.
             '#title' => 'Concatenate with',
             '#default_value' => $this->getSetting('concat'),
+            //current valueof concatis retrievedusing the getsettings() andset as default value for form element.
         ];
         return $form;
     }
@@ -48,16 +52,20 @@ class FieldFormatter extends FormatterBase {
     /**
      * {@inheritdoc}
      */
+
     public function settingsSummary() {
         $summary = [];
         $summary[] = $this->t("concatenate with : @concat", ["@concat" => $this->getSetting('concat')]);
         return $summary;
+
+            // returns an array containing a single string that describes the current setting value of 'concat'
+
     }
 
     /**
      * {@inheritdoc}
      */
-
+//generates the rendered output of the field formatter.
      public function viewElements(FieldItemListInterface $items, $langcode) {
         $element = [];
 
@@ -67,6 +75,7 @@ class FieldFormatter extends FormatterBase {
             ];
         }
         return $element;
+           //It iterates over each item in the field and creates an element for each.
      }
 
 }
