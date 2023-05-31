@@ -22,4 +22,12 @@ config.custom:                                                      #route named
   requirements:
     _permission: 'permission for config form'                       #users should have this permission to access the content.
   options:
-    _admin_route: TRUE                                              #admin route enable.
+    _admin_route: TRUE
+
+dependent.form:
+  path: '/dropdown'
+  defaults:
+    _form: '\Drupal\preethy_exercise\Form\DependentDropdown'
+    _title: 'Dependent Dropdown'
+  requirements:
+    _permission: 'access content'                                           #admin route enable.
