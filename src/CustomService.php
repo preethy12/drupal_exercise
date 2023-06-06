@@ -3,6 +3,7 @@
 namespace Drupal\preethy_exercise;
 
 use Drupal\Core\Config\ConfigFactory;
+//when we want to use multipletimes
 
 /**
  * Class CustomService.
@@ -30,7 +31,7 @@ class CustomService {
    */
   public function getName() {
     $config = $this->configFactory->get('preethy_exercise.settings');
-    return $config->get('fullname');
+    return $config->get('fullname');//will return the name when we submit the form
   }
 
 }

@@ -53,3 +53,14 @@ function preethy_exercise_user_login($account) {
     $event_dispatcher->dispatch($event, UserLoginEvent::EVENT_NAME);
   }
 
+function preethy_exercise_page_attachments_alter(array &$attachments) {
+    // Conditionally remove an asset.
+    // print_r($attachments['#attached']);
+    // exit;
+    if (in_array('preethy_exercise/css_lib', $attachments['#attached']['library'])) {
+
+    }
+}
+
+
+

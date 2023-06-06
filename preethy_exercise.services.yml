@@ -1,6 +1,7 @@
 services:
-  custom_service:
-    class: Drupal\preethy_exercise\CustomService
+  custom_service:    # Service ID
+    class: Drupal\preethy_exercise\CustomService # Class implementing the service
+
     arguments: ['@config.factory']
 
 
@@ -8,3 +9,9 @@ services:
     class: '\Drupal\preethy_exercise\EventSubscriber\CustomConfigEventsSubscriber'
     tags:
     - { name: 'event_subscriber' }
+
+  preethy_exercise.commands: #It's a unique identifier for the service
+    class: \Drupal\preethy_exercise\Commands\DrushHelpersCommands
+    arguments: ['@entity_type.manager'] #the arguments to be passed to the constructor of the DrushHelpersCommands class
+    tags:
+      - { name: drush.command } # Drush scans for services with this tag and registers them as available commands in the Drupal site.
