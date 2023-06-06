@@ -1,0 +1,19 @@
+<?php
+//allows us to modify or add variables that will be available in the page template.
+//the function adds a new variable named $good to the $variables array. The value of $good is set to the string "How are you".
+// By adding this variable, it becomes accessible in the page template and can be used for rendering or other purposes.
+
+function custom_theme_preprocess_page(&$variables){
+    $variables["good"]=  "How are you";
+}
+// hook implementation for altering theme suggestions for node templates. It is called when Drupal is determining which template file to use for rendering a node
+function custom_theme_theme_suggestions_node_alter(array &$suggestions,array $variables){
+    // print_r($suggestions);exit;
+    if(\Drupal::currentUser()->isAnonymous()){
+        $suggestions[]="node__anonymous";
+    }
+//the function checks if the current user is anonymous (not logged in). If the user is anonymous, it adds a new suggestion to the $suggestions array using the key "node__anonymous".
+// This suggests using a specific template file, such as node--anonymous.html.twig, for rendering anonymous nodes.
+
+
+}
