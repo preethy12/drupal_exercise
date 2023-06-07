@@ -1,3 +1,4 @@
+
 services:
   custom_service:    # Service ID
     class: Drupal\preethy_exercise\CustomService # Class implementing the service
@@ -10,7 +11,7 @@ services:
     tags:
     - { name: 'event_subscriber' }
 
-  preethy_exercise.commands: #It's a unique identifier for the service
+  preethy_exercise.commands:                                        #It's a unique identifier for the service
     class: \Drupal\preethy_exercise\Commands\DrushHelpersCommands
     arguments: ['@entity_type.manager'] #the arguments to be passed to the constructor of the DrushHelpersCommands class
     tags:

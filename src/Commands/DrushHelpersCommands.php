@@ -23,7 +23,7 @@ class DrushHelpersCommands extends DrushCommands {
    * Command that returns a list of all node id and title for article.
    *
    * @field-labels
-   *  id: User Id
+   *  id: Id
    *  title:title
    * @default-fields id,title
    *
