@@ -37,4 +37,16 @@ function preethy_exercise_schema() {
     return $schema;
 }
 
+/*
+ * Implement hook_update_N().
+ */
+/**
+ * TO MAKE CHANGES ON CONFIG FORM
+ */
+function preethy_exercise_update_100301() {
+    $config = \Drupal::configFactory()->getEditable('preethy_exercise.settings');
+    $config->set('email','Preethyray12@gmail.com');
+    $config->save();
+}
+
 

@@ -60,11 +60,11 @@ function preethy_exercise_user_login($account) {
     // Check if the current route is admin.content.comment.
     if ($route_name === 'comment.admin') {
       // Modify or add attachments as needed.
-      $attachments['#attached']['library'][] = 'custom_general/css_lib';
+      $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
     }//for view node
     elseif($route_name=='entity.node.canonical'){
-      $attachments['#attached']['library'][] = 'custom_general/css_lib';
+      $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
     }
   }
