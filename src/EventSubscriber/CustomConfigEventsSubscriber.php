@@ -29,19 +29,21 @@ class CustomConfigEventsSubscriber implements EventSubscriberInterface {
    *   Our custom event object.
    */
   public function onUserLogin(UserLoginEvent $event) {
-  /* Database is initialized.*/
+    /* Database is initialized.*/
     $database = \Drupal::database();
-    //formatstimestamp into date time
+    // Formatstimestamp into date time.
     $dateFormatter = \Drupal::service('date.formatter');
 
-    //fetching user data
+    // Fetching user data.
     $account_created = $database->select('users_field_data', 'ud')
-      ->fields('ud', ['created']) //returns when the account was created
-      ->condition('ud.uid', $event->account->id()) //returns user id
+    // Returns when the account was created.
+      ->fields('ud', ['created'])
+    // Returns user id.
+      ->condition('ud.uid', $event->account->id())
       ->execute()
       ->fetchField();
 
-    \Drupal::messenger()->addStatus(t('Welcome, your account was created on %created_date.', [ '%created_date' => $dateFormatter->format($account_created, 'short'),]));
+    \Drupal::messenger()->addStatus(t('Welcome, your account was created on %created_date.', ['%created_date' => $dateFormatter->format($account_created, 'short')]));
   }
 
 }
