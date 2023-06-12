@@ -3,4 +3,3 @@ add_content.article:
   title: "Config form"        #button title
   appears_on:
     - "preethy_exercise.custom_form" #button will be placed on this particular page.
-

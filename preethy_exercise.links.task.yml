@@ -13,5 +13,3 @@ preethy_exercise.hello_world:
  route_name: preethy_exercise.hello_world     #directs to controller page
  title: 'controller'
  base_route: preethy_exercise.custom_form
-
-

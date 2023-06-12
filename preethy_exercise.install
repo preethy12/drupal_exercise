@@ -1,52 +1,65 @@
 <?php
-// update => module reinstallation not required.
+
 /**
- * implements hook_schema().
+ * @file
+ * Implements hook_schema().
  */
-// This function creates table user_details in db.
+
+/**
+ * Hook.
+ */
 function preethy_exercise_schema() {
-    $schema['user_details'] = [
-        'description' => 'Stores user details',
-        'fields' => [
-            'id' => [
-                'description' => 'serial number',
-                'type' => 'serial',
-                'not null' => true
-            ],
-            'firstname' => [
-                'description' => 'Firstname of the user',
-                'type' => 'varchar',
-                'length' => 60,
-                'not null' => true,
-            ],
-            'email' => [
-                'description' => 'Email of the user',
-                'type' => 'varchar',
-                'length' => 60,
-                'not null' => true,
-            ],
-            'gender' => [
-                'description' => 'gender of the user',
-                'type' => 'varchar',
-                'length' => 60,
-                'not null' => true,
-            ],
-        ],
-        'primary key' => ['id'],
-    ];
-    return $schema;
+  // This function creates table user_details in db.
+  $schema['user_details'] = [
+    'description' => 'Stores user details',
+    'fields' => [
+      'id' => [
+        'description' => 'serial number',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'firstname' => [
+        'description' => 'Firstname of the user',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'email' => [
+        'description' => 'Email of the user',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'gender' => [
+        'description' => 'gender of the user',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+  return $schema;
 }
 
-/*
+/**
  * Implement hook_update_N().
  */
+
 /**
- * TO MAKE CHANGES ON CONFIG FORM
+ * TO MAKE CHANGES ON CONFIG FORM.
  */
-function preethy_exercise_update_100301() {
-    $config = \Drupal::configFactory()->getEditable('preethy_exercise.settings');
-    $config->set('email','Preethyray12@gmail.com');
-    $config->save();
+function preethy_exercise_update_100308() {
+  /* $config = \Drupal::configFactory()->getEditable('preethy_exercise.settings'); */
+  // $config->set('email','Preethyray12@gmail.com');
+  // $config->save();
+  $query = \Drupal::entityQuery('node')->condition('type', 'article')->accessCheck(TRUE);
+  $nids = $query->execute();
+  $nodes = Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $node->set("title", strtoupper("new value"));
+    $node->save();
+  }
+  \Drupal::messenger()->addMessage('Article title updated');
+
 }
-
-
