@@ -30,4 +30,13 @@ dependent.form:
     _form: '\Drupal\preethy_exercise\Form\DependentDropdown'
     _title: 'Dependent Dropdown'
   requirements:
-    _permission: 'access content'                                           #admin route enable.
+    _permission: 'access content'
+
+
+preethy_exercise.country_state_district_form:
+  path: '/country-state-district-forms'
+  defaults:
+    _form: '\Drupal\preethy_exercise\Form\CountryStateDistrictForms'
+    _title: 'Country State District Form'
+  requirements:
+    _permission: 'access content'                                          #admin route enable.
