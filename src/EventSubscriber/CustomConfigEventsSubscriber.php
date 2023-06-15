@@ -70,7 +70,7 @@ class CustomConfigEventsSubscriber implements EventSubscriberInterface {
       ->execute()
       ->fetchField();
 
-    $this->messenger->addStatus(t('Welcome, your account was created on %created_date.', ['%created_date' => $dateFormatter->format($account_created, 'short')]));
+    $this->messenger->addStatus(t('Welcom, your account was created on %created_date.', ['%created_date' => $dateFormatter->format($account_created, 'short')]));
   }
 
 }

@@ -2,9 +2,8 @@
 
 namespace Drupal\preethy_exercise\Event;
 
-// Base class.
+// Included the class name event.
 use Drupal\Component\EventDispatcher\Event;
-// Used to get user details.
 use Drupal\user\UserInterface;
 
 /**
@@ -13,12 +12,15 @@ use Drupal\user\UserInterface;
 class UserLoginEvent extends Event {
 
   // This makes it easier for subscribers to reliably use our event name.
+  // Name of the event.The event get dispatched.
+  // When the user get logged in into the system.
   const EVENT_NAME = 'preethy_exercise_user_login';
 
   /**
    * The user account.
    *
    * @var \Drupal\user\UserInterface
+   *   This is the user interface.
    */
   public $account;
 
@@ -28,8 +30,12 @@ class UserLoginEvent extends Event {
    * @param \Drupal\user\UserInterface $account
    *   The account of the user logged in.
    */
+
+  /**
+   * From the dispatch function we will pass the account object here and set.
+   */
   public function __construct(UserInterface $account) {
-    // Returns user account.
+
     $this->account = $account;
   }
 

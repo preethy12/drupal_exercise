@@ -8,6 +8,7 @@ services:
 
   custom_events_subscriber:
     class: '\Drupal\preethy_exercise\EventSubscriber\CustomConfigEventsSubscriber'
+    arguments: ['@database', '@messenger','@date.formatter']
     tags:
     - { name: 'event_subscriber' }
 
