@@ -49,7 +49,7 @@ class CountryStateDistrictForms extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $selected_country_id = $form_state->getValue("country");
-    $selected_state_id = $form_state->getValue("country");
+    $selected_state_id = $form_state->getValue("state");
     $form['country'] = [
       '#type' => 'select',
       '#title' => $this->t('Country'),

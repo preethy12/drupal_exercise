@@ -2,6 +2,8 @@
 
 namespace Drupal\preethy_exercise\EventSubscriber;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\preethy_exercise\Event\UserLoginEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -11,6 +13,33 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * @package Drupal\preethy_exercise\EventSubscriber
  */
 class CustomConfigEventsSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * CustomConfigEventsSubscriber constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
+   */
+  public function __construct(Connection $database, MessengerInterface $messenger) {
+    $this->database = $database;
+    $this->messenger = $messenger;
+  }
 
   /**
    * {@inheritdoc}
@@ -29,21 +58,19 @@ class CustomConfigEventsSubscriber implements EventSubscriberInterface {
    *   Our custom event object.
    */
   public function onUserLogin(UserLoginEvent $event) {
-    /* Database is initialized.*/
-    $database = \Drupal::database();
-    // Formatstimestamp into date time.
+    // Format timestamp into date time.
     $dateFormatter = \Drupal::service('date.formatter');
 
-    // Fetching user data.
-    $account_created = $database->select('users_field_data', 'ud')
-    // Returns when the account was created.
+    // Fetch user data.
+    $account_created = $this->database->select('users_field_data', 'ud')
+      // Returns when the account was created.
       ->fields('ud', ['created'])
-    // Returns user id.
+      // Returns user id.
       ->condition('ud.uid', $event->account->id())
       ->execute()
       ->fetchField();
 
-    \Drupal::messenger()->addStatus(t('Welcome, your account was created on %created_date.', ['%created_date' => $dateFormatter->format($account_created, 'short')]));
+    $this->messenger->addStatus(t('Welcome, your account was created on %created_date.', ['%created_date' => $dateFormatter->format($account_created, 'short')]));
   }
 
 }

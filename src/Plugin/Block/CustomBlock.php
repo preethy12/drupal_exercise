@@ -50,9 +50,8 @@ class CustomBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     // Render function.
-    $form = \Drupal::formBuilder()->getForm('\Drupal\preethy_exercise\Form\CustomForm');
+    $form = $this->entityFieldManager->getForm('\Drupal\preethy_exercise\Form\CustomForm');
     return $form;
-
   }
 
 }

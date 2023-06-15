@@ -5,7 +5,8 @@ namespace Drupal\preethy_exercise\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 
 /**
  * Creates table.
@@ -17,22 +18,24 @@ class CustomConfigForm extends ConfigFormBase {
    */
   const CONFIGNAME = "preethy_exercise.settings";
 
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
 
   /**
-   * The entity field manager.
+   * CustomConfigForm constructor.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  protected $entityFieldManager;
-
-  /**
-   * Constructs a new CustomConfigForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
-   *   The entity field manager.
-   */
-  public function __construct(EntityFieldManagerInterface $entityFieldManager) {
-    $this->entityFieldManager = $entityFieldManager;
+  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+    parent::__construct($config_factory);
+    $this->messenger = $messenger;
   }
 
   /**
@@ -40,7 +43,8 @@ class CustomConfigForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_field.manager')
+      $container->get('config.factory'),
+      $container->get('messenger')
     );
   }
 
@@ -74,7 +78,6 @@ class CustomConfigForm extends ConfigFormBase {
         ],
       ],
       '#default_value' => $config->get("fullname"),
-
     ];
 
     $form['email'] = [
@@ -96,11 +99,15 @@ class CustomConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config(static::CONFIGNAME);
-    $config->set("fullname", $form_state->getValue('fullname'));
-    $config->set("email", $form_state->getValue('email'));
-    $config->set("college", $form_state->getValue('college'));
-    $config->save();
+    parent::submitForm($form, $form_state);
+
+    $this->config(static::CONFIGNAME)
+      ->set("fullname", $form_state->getValue('fullname'))
+      ->set("email", $form_state->getValue('email'))
+      ->set("college", $form_state->getValue('college'))
+      ->save();
+
+    $this->messenger->addStatus($this->t('The configuration options have been saved.'));
   }
 
 }
