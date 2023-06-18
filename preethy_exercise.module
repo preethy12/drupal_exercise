@@ -5,6 +5,7 @@
  * Implements different hook().
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 // Use Drupal\Core\Entity\EntityInterface;.
@@ -46,6 +47,12 @@ function preethy_exercise_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_user_login().
  */
+
+use Drupal\preethy_exercise\Event\UserLoginEvent;
+
+/**
+ * Instantiate event.
+ */
 function preethy_exercise_user_login($account) {
   // Instantiate our event.
   $event = new UserLoginEvent($account);
@@ -72,5 +79,77 @@ function preethy_exercise_page_attachments_alter(array &$attachments) {
   elseif ($route_name == 'entity.node.canonical') {
     $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
+  }
+}
+
+/**
+ * @file
+ * Contains custom_mail.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function preethy_exercise_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the custom_mail module.
+    case 'help.page.preethy_exercise':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('How to send an email programmatically') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function preethy_exercise_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($key) {
+    case 'create_page':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Page created: @title', ['@title' => $params['node_title']], $options);
+      $message['body'][] = $params['message'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function preethy_exercise_entity_insert(EntityInterface $entity) {
+
+  if ($entity->getEntityTypeId() !== 'node' || ($entity->getEntityTypeId() === 'node' && $entity->bundle() !== 'page')) {
+    return;
+  }
+
+  $mailManager = \Drupal::service('plugin.manager.mail');
+
+  $module = 'preethy_exercise';
+  $key = 'create_page';
+  $to = \Drupal::currentUser()->getEmail();
+  $params['message'] = $entity->get('body')->value;
+  $params['node_title'] = $entity->label();
+  $langcode = \Drupal::currentUser()->getPreferredLangcode();
+  $send = TRUE;
+
+  $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+  if ($result['result'] !== TRUE) {
+
+    \Drupal::messenger()->addMessage(t('There was a problem sending your message and it was not sent'), 'error');
+    /*drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');.*/
+  }
+  else {
+
+    \Drupal::messenger()->addMessage(t('There was a problem sending your message and it was not sent'), 'status');
+    // drupal_set_message(t('Your message has been sent.'));.
   }
 }

@@ -2,55 +2,63 @@
 
 namespace Drupal\preethy_exercise\Plugin\Block;
 
-use Drupal\Core\Entity\EntityFieldManagerInterface;
+// Using this as base class for the block.
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Drupal\Core\Block\BlockBase;
-
 /**
- * Provides simple block for d4drupal.
+ * Provides a simple block for custom form.
  *
- * @Block (
- * id = "custom_general",
- * admin_label = "Custom Plugin Block"
+ * @Block(
+ * id="custom_form_example",
+ * admin_label="custom form block",
  * )
  */
 class CustomBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The form builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * Constructs a HelloBlock object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->formBuilder = $form_builder;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_field.manager')
+    // Instantiate this block class.
+    return new static($configuration, $plugin_id, $plugin_definition,
+      // Load the service required to construct this class.
+      $container->get('form_builder')
     );
   }
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * Creating constructor to accept the EntityFieldManagerInterface.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entityFieldManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityFieldManager = $entityFieldManager;
-  }
-
-  /**
-   * Render function.
+   * {@inheritDoc}
    */
   public function build() {
-    // Render function.
-    $form = $this->entityFieldManager->getForm('\Drupal\preethy_exercise\Form\CustomForm');
+    // This service will return customform in the block.
+    $form = $this->formBuilder->getForm('Drupal\preethy_exercise\Form\CustomForm');
     return $form;
   }
 

@@ -29,6 +29,13 @@ class CustomConfigEventsSubscriber implements EventSubscriberInterface {
   protected $messenger;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
    * CustomConfigEventsSubscriber constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
