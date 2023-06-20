@@ -4,7 +4,7 @@ namespace Drupal\preethy_exercise;
 
 use Drupal\Core\Config\ConfigFactory;
 
-// When we want to use multipletimes.
+// When we want to use multiple times.
 
 /**
  * Class returns the name.

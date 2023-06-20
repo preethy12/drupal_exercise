@@ -39,4 +39,19 @@ preethy_exercise.country_state_district_form:
     _form: '\Drupal\preethy_exercise\Form\CountryStateDistrictForms'
     _title: 'Country State District Form'
   requirements:
-    _permission: 'access content'                                          #admin route enable.
+    _permission: 'access content'  #admin route enable.
+
+
+preethy_exercise.dynamic_demo: # machine name for route to uniquely identify the route within the Drupal system
+  path: '/node/{node}/title' #URL path pattern for the route
+  defaults:         #default values for the route's parameters.
+    _controller: '\Drupal\preethy_exercise\Controller\ControllerDemo::nodeTitle'       #controller method that will be executed when the route is accessed.
+    _title_callback: '\Drupal\preethy_exercise\Controller\ControllerDemo::nodeTitlePageTitle' #callback method that determines the page title for this route.
+  requirements:
+    _custom_access: '\Drupal\preethy_exercise\Controller\ControllerDemo::accessNode' #determines whether the user has access to the route.
+    # _permission: 'access content'
+  options:
+    _admin_route: TRUE  #This indicates that the route is an administrative route.
+    parameters: #defines the parameters expected by the route.
+      node:
+        type: entity:node

@@ -2,14 +2,18 @@
 
 namespace Drupal\preethy_exercise\Commands;
 
+// To format the output usingRowsOfFields.
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+// Used as base class.
 use Drush\Commands\DrushCommands;
+// To use the service.
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
- * DrushHelperCommands to get node id and title.
+ * Undocumented class.
  */
 class DrushHelpersCommands extends DrushCommands {
+  // Extending the base class.
 
   /**
    * Entity manager service.
@@ -20,36 +24,35 @@ class DrushHelpersCommands extends DrushCommands {
     $this->entityManager = $entityTypeManager;
     parent::__construct();
   }
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
-   * Command that returns a list of all node id and title for article.
+   * Command that returns a list of all blocked users.
    *
    * @field-labels
-   *  id: Id
-   *  title:title
+   *  id: Node Id
+   *  title: Title
    * @default-fields id,title
    *
-   * @usage drush-helpers:article-node
-   *   Returns all article node
+   * @usage drush-helpers: get-title
+   *   Returns all get-title
    *
-   * @command drush-helpers:article-node
-   * @aliases article-node
+   * @command drush-helpers:get-title
+   * @aliases get-title
    *
    * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
-   *   This is about loading nodes.
+   *   This is about loading.
    */
-  public function loadFirstTenNodes() {
-    // The loadByProperties() method is used to load nodes of type 'article'
-    // entityTypeManager() to get the storage handler for node entity type.
-    // getStorage('node') returns an instance of storage
-    // handler for specified entity type.
-    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'article']);
+  public function drushDemo() {
+    $nodes = $this->entityManager->getStorage('node')->loadByProperties(['type' => 'article']);
     $rows = [];
     foreach ($nodes as $node) {
       $rows[] = [
-      // Get the id.
         'id' => $node->id(),
-      // Get the title.
         'title' => $node->getTitle(),
       ];
     }

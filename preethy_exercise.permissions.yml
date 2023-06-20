@@ -3,3 +3,10 @@
 permission for config form:
   title: handles permission for config form
   description: handles permission for config form
+
+
+Node permission:
+  title : 'permission title'
+  description: 'permission description'
+permission_callbacks:
+  - \Drupal\preethy_exercise\NodePermissions::nodePermission

@@ -4,26 +4,25 @@ namespace Drupal\preethy_exercise\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Dependent dropdown form.
+ * Implements the example form.
  */
 class CountryStateDistrictForms extends FormBase {
   /**
-   * The database connection.
+   * The Messenger service.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
-   * Constructs a new CountryStateDistrictForms object.
+   * Constructs InviteByEmail .
    *
    * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   *   The database service.
    */
   public function __construct(Connection $database) {
     $this->database = $database;
@@ -34,7 +33,7 @@ class CountryStateDistrictForms extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('database'),
     );
   }
 
@@ -42,60 +41,73 @@ class CountryStateDistrictForms extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'country_state_district_form';
+    return 'dropdown_form';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $selected_country_id = $form_state->getValue("country");
-    $selected_state_id = $form_state->getValue("state");
+    $country_id = $form_state->getValue("country");
+
+    $state_id = $form_state->getValue("state");
+
     $form['country'] = [
+      // Is of type select.
       '#type' => 'select',
-      '#title' => $this->t('Country'),
+      // Title.
+      '#title' => 'CHOOSE COUNTRY',
+      // Will give the list of country.
       '#options' => $this->getCountryOptions(),
-      '#empty_option' => $this->t('- Select -'),
+      '#empty_option'  => '-select-',
       '#ajax' => [
-        'callback' => [$this, 'ajaxStateDropdownCallback'],
-        'wrapper' => 'state-dropdown-wrapper',
+      // Function defined for ajax.
+        'callback' => '::dropdownCallback',
+      // Specifies id that will be updated with ajax response.
+        'wrapper' => 'field-container',
+      // Since it of type select.
         'event' => 'change',
-        'progress' => [
-          'type' => 'throbber',
-          'message' => $this->t('Loading...'),
-        ],
       ],
     ];
 
+    // Creating a form for state.
     $form['state'] = [
+    // Is of type select.
       '#type' => 'select',
-      '#title' => $this->t('State'),
-      '#options' => $this->getstateOptions($selected_country_id),
-      '#prefix' => '<div id="state-dropdown-wrapper">',
+    // Title.
+      '#title' => 'CHOOSE STATE',
+    // Will return list of state.
+      '#options' => $this->getStateOptions($country_id),
+      '#empty_option'  => '-select-',
+      '#prefix' => '<div id="field-container"',
       '#suffix' => '</div>',
-      '#empty_option' => $this->t('- Select -'),
-      '#disabled' => FALSE,
       '#ajax' => [
-        'callback' => [$this, 'ajaxDistrictDropdownCallback'],
-        'wrapper' => 'district-dropdown-wrapper',
+    // Function defined for ajax.
+        'callback' => '::dropdownCallback',
+    // Specifies id that will be updated with ajax response.
+        'wrapper' => 'dist-container',
+    // Since it of type select.
         'event' => 'change',
-        'progress' => [
-          'type' => 'throbber',
-          'message' => $this->t('Loading...'),
-        ],
       ],
     ];
 
+    // Creating a form for district.
     $form['district'] = [
+    // Is of type select.
       '#type' => 'select',
-      '#title' => $this->t('District'),
-      '#options' => $this->getDistrictsByState($selected_state_id),
-      '#prefix' => '<div id="district-dropdown-wrapper">',
+    // Title.
+      '#title' => 'CHOOSE DISTRICT',
+    // Will return list of district.
+      '#options' => $this->getDistrictOptions($state_id),
+      '#empty_option'  => '-select-',
+      '#prefix' => '<div id="dist-container"',
       '#suffix' => '</div>',
-      '#empty_option' => $this->t('- Select -'),
-      '#disabled' => FALSE,
     ];
-
+    // Submitting the form.
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#value' => 'Submit',
+    ];
     return $form;
   }
 
@@ -103,28 +115,41 @@ class CountryStateDistrictForms extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Handle form submission if needed.
+    // Submit form.
+    // Value will be stored.
+    $trigger = (string) $form_state->getTriggeringElement()['#value'];
+    if ($trigger != 'submit') {
+      // If value is not submitted it will be triggered.
+      $form_state->setRebuild();
+    }
   }
 
   /**
-   * Ajax callback for the state dropdown.
+   * Function for ajax dropdown.
    */
-  public function ajaxStateDropdownCallback(array &$form, FormStateInterface $form_state) {
-    return $form['state'];
+  public function dropdownCallback(array &$form, FormStateInterface $form_state) {
+    // This has a ajax callback which will be.
+    // Triggered when value of dropdown changes.
+    // Getting the getTriggeringElement.
+    $triggering_element = $form_state->getTriggeringElement();
+    $triggering_element_name = $triggering_element['#name'];
+
+    if ($triggering_element_name === 'country') {
+      // Lists the state for the particular country.
+      return $form['state'];
+    }
+    elseif ($triggering_element_name === 'state') {
+      // Lists the district for the particular state.
+      return $form['district'];
+    }
+
   }
 
   /**
-   * Ajax callback for the district dropdown.
+   * Function to retrieve country options.
    */
-  public function ajaxDistrictDropdownCallback(array &$form, FormStateInterface $form_state) {
-    return $form['district'];
-  }
-
-  /**
-   * Helper function to retrieve country options.
-   */
-  private function getCountryOptions() {
-    $query = Database::getConnection()->select('country', 'c');
+  public function getCountryOptions() {
+    $query = $this->database->select('country', 'c');
     $query->fields('c', ['id', 'name']);
     $result = $query->execute();
     $options = [];
@@ -132,44 +157,39 @@ class CountryStateDistrictForms extends FormBase {
     foreach ($result as $row) {
       $options[$row->id] = $row->name;
     }
-
     return $options;
   }
 
   /**
-   * Lists the state option when we select country.
+   * Function to retrieve state options.
    */
-  private function getstateOptions($selected_country_id) {
-
-    // Fetch the states for the selected country.
-    $query = Database::getConnection()->select('state', 's');
-    $query->fields('s', ['id', 'name']);
-    $query->condition('s.country_id', $selected_country_id);
+  public function getStateOptions($country_id) {
+    $query = $this->database->select('state', 's');
+    $query->fields('s', ['id', 'country_id', 'name']);
+    $query->condition('s.country_id', $country_id);
     $result = $query->execute();
+    $options = [];
 
-    // Iterate over the result to retrieve the state information.
-    $states = [];
     foreach ($result as $row) {
-      $states[$row->id] = $row->name;
+      $options[$row->id] = $row->name;
     }
-    return $states;
+    return $options;
   }
 
   /**
-   * Lists the district when we select state.
+   * Function to retrieve district options.
    */
-  public function getDistrictsByState($selected_state_id) {
-    $query = Database::getConnection()->select('district', 'd');
-    $query->fields('d', ['id', 'name']);
-    $query->condition('d.state_id', $selected_state_id);
+  public function getDistrictOptions($state_id) {
+    $query = $this->database->select('district', 'd');
+    $query->fields('d', ['id', 'state_id', 'name']);
+    $query->condition('d.state_id', $state_id);
     $result = $query->execute();
+    $options = [];
 
-    $districts = [];
     foreach ($result as $row) {
-      $districts[$row->id] = $row->name;
+      $options[$row->id] = $row->name;
     }
-
-    return $districts;
+    return $options;
   }
 
 }
