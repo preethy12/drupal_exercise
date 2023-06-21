@@ -3,3 +3,8 @@ css_lib:
   css:
     theme: #CSS file  to be included in the theme
       CSS/style.css: {}
+
+jss_lib:
+  version: 1.x
+  js:
+    js/customform.js: {}

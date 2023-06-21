@@ -85,7 +85,10 @@ class CustomConfigForm extends ConfigFormBase {
       '#title' => 'Email',
       '#default_value' => $config->get("email"),
     ];
-
+    $form['phone_number'] = [
+      '#type' => 'tel',
+      '#title' => 'phone number',
+    ];
     $form['college'] = [
       '#type' => 'textfield',
       '#title' => 'College',
@@ -93,6 +96,25 @@ class CustomConfigForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Function for form validation.
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (strlen($form_state->getValue('phone_number')) < 5) {
+      $form_state->setErrorByName('phone_number', $this->t('The phone number is too short. Please enter a full phone number.'));
+    }
+
+    $email = $form_state->getValue('email');
+
+    if (empty($email)) {
+      $form_state->setErrorByName('email', $this->t('Email is required.'));
+    }
+    elseif (!preg_match('/^[\w\-\.]+@[\w\-\.]+\.\w+$/', $email)) {
+      $form_state->setErrorByName('email', $this->t('Please enter a valid email address.'));
+    }
+
   }
 
   /**

@@ -24,6 +24,10 @@ class DrushHelpersCommands extends DrushCommands {
     $this->entityManager = $entityTypeManager;
     parent::__construct();
   }
+
+  /**
+   * Creates a new instance of the class.
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')

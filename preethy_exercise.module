@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 // Use Drupal\Core\Entity\EntityInterface;.
 
@@ -80,6 +81,13 @@ function preethy_exercise_page_attachments_alter(array &$attachments) {
     $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
   }
+
+  $attachments['#attached']['library'][] = 'preethy_exercise/jss_lib';
+  $attachments['#attached']['drupalSettings']['preethy_exercise']['color_test'] = "pass variable from module to js";
+  // if (in_array('custom_general/css_lib', $attachments['#attached']['library'])) {
+  //     $index = array_search('custom_general/css_lib', $attachments['#attached']['library']);
+  //     unset($attachments['#attached']['library'][$index]);
+  //   }
 }
 
 /**
@@ -152,4 +160,45 @@ function preethy_exercise_entity_insert(EntityInterface $entity) {
     \Drupal::messenger()->addMessage(t('There was a problem sending your message and it was not sent'), 'status');
     // drupal_set_message(t('Your message has been sent.'));.
   }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function preethy_exercise_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  //to alter something in the build( i.e user view page)
+  // alter something that  already exists.
+  if ($entity->getEntityTypeId() == "node") {
+      unset($build['field_image']);//image field is removed
+      $build['markup'] = [
+          '#markup' => "<h3>Testing entity view alter hook</h3>",//static text we are adding
+      ];
+  }
+
+}
+
+/**
+* Implements hook_entity_view().
+*/
+function preethy_exercise_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  // condition entity type = node
+  // view-gets called before the render action takes place.
+  //performing action on node view.
+  $session = \Drupal::request()->getSession();
+  $counts = $session->get("custom_general.node_view_count", []);
+  if (!isset($counts[$entity->id()])) {
+      $counts[$entity->id()] = 1;
+  }
+  else {
+      $counts[$entity->id()]++;
+  }
+
+  $session->set("custom_general.node_view_count", $counts);
+$build['count'] = [
+  '#markup' => "Viewed " . $counts[$entity->id()] . " times",
+  '#cache' => [
+      'max-age' => 0,
+  ],
+];
+
 }

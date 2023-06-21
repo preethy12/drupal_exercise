@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 
 /**
  * Form Interactions.
@@ -61,11 +63,15 @@ class CustomForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#attached']['library'][] = "preethy_exercise/jss_lib";
     $form['firstname'] = [
       '#type' => 'textfield',
       '#title' => 'First Name',
       '#required' => TRUE,
       '#placeholder' => 'First Name',
+      // '#ajax' => [
+      // 'callback' => '::setAjaxSubmit',
+      // ],
     ];
     $form['email'] = [
       '#type' => 'textfield',
@@ -79,11 +85,40 @@ class CustomForm extends FormBase {
         'female' => 'Female',
       ],
     ];
+    $form['temporary_address'] = [
+      '#type' => 'textfield',
+      '#title' => 'temporary Address',
+      '#required' => TRUE,
+    ];
+    $form['same_address'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Permanent address is same',
+      '#ajax' => [
+        'callback' => '::setAjaxSubmit',
+      ],
+    ];
+    $form['permanent_address'] = [
+      '#type' => 'textfield',
+      '#title' => 'Permanent Address',
+      '#required' => TRUE,
+    ];
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
+      // '#ajax' => [
+      // 'callback' => '::setAjaxSubmit',
+      // ],
     ];
     return $form;
+  }
+
+  /**
+   * Ajax callback function.
+   */
+  public function setAjaxSubmit() {
+    $response = new AjaxResponse();
+    $response->addCommand(new InvokeCommand("html", 'datacheck'));
+    return $response;
   }
 
   /**
@@ -95,6 +130,10 @@ class CustomForm extends FormBase {
       'firstname' => $form_state->getValue("firstname"),
       'email' => $form_state->getValue("email"),
       'gender' => $form_state->getValue("gender"),
+      'temporary Address' => $form_state->getValue("temporary_address"),
+      'Permanent address is same' => $form_state->getValue("same_address"),
+      'permanent address' => $form_state->getValue("permanent_address"),
+
     ])->execute();
   }
 
