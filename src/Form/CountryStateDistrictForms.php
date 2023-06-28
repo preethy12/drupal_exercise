@@ -41,6 +41,7 @@ class CountryStateDistrictForms extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    // Form ID that will be used to uniquely identify this particular form.
     return 'dropdown_form';
   }
 
@@ -128,9 +129,8 @@ class CountryStateDistrictForms extends FormBase {
    * Function for ajax dropdown.
    */
   public function dropdownCallback(array &$form, FormStateInterface $form_state) {
-    // This has a ajax callback which will be.
-    // Triggered when value of dropdown changes.
-    // Getting the getTriggeringElement.
+    /*This has a ajax callback which will be. Triggered when value of
+    dropdown changes.Getting the getTriggeringElement.*/
     $triggering_element = $form_state->getTriggeringElement();
     $triggering_element_name = $triggering_element['#name'];
 

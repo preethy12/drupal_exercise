@@ -9,4 +9,4 @@ Node permission:
   title : 'permission title'
   description: 'permission description'
 permission_callbacks:
-  - \Drupal\preethy_exercise\NodePermissions::nodePermission
+  - \Drupal\preethy_exercise\NodePermissions::nodePermission #The permission being checked is whether the user has the ability to write comments on nodes.

@@ -58,17 +58,27 @@ class CustomConfigForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+
+  /**
+   * Retrieves the configuration names that are.
+   */
+
+  /**
+   * Editable for a specific entity or configuration form.
+   */
   protected function getEditableConfigNames() {
+    // Custom method specific to the class you are referring to.
     return [
       static::CONFIGNAME,
     ];
+    /* returns an array with a single element, static::CONFIGNAME. The static:: keyword is used to refer to the current class, and CONFIGNAME is a constant defined within that class.*/
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config(static::CONFIGNAME);
+    $config = $this->config(static::CONFIGNAME); /* retrieves a configuration object based on the value of static::CONFIGNAME config() is a method used for accessing configuration objects.static::CONFIGNAME is a reference to a class constant or a static property that holds the name of the configuration object.*/
     $form['fullname'] = [
       '#type' => 'textfield',
       '#title' => ' <span>Fullname</span>',
@@ -111,7 +121,7 @@ class CustomConfigForm extends ConfigFormBase {
     if (empty($email)) {
       $form_state->setErrorByName('email', $this->t('Email is required.'));
     }
-    elseif (!preg_match('/^[\w\-\.]+@[\w\-\.]+\.\w+$/', $email)) {
+    elseif (!preg_match(' /^[\w\-\.]+@[\w\-\.]+\.\w+$/', $email)) {
       $form_state->setErrorByName('email', $this->t('Please enter a valid email address.'));
     }
 

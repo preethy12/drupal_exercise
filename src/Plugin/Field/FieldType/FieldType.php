@@ -25,6 +25,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
+    // Define the database schema for the field type.
     return [
       'columns' => [
         'value' => [
@@ -39,6 +40,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
+    // Set default storage settings for the field type.
     return [
       'length' => 255,
     ] + parent::defaultStorageSettings();
@@ -48,6 +50,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    // Build the form for configuring the storage settings of the field type.
     $element = [];
 
     $element['length'] = [
@@ -63,6 +66,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function defaultFieldSettings() {
+    // Set default field settings for the field type.
     return [
       'moreinfo' => "More info default value",
     ] + parent::defaultFieldSettings();
@@ -72,6 +76,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    // Build the form for configuring the field settings of the field type.
     $element = [];
     $element['moreinfo'] = [
       '#type' => 'textfield',
@@ -86,6 +91,7 @@ class FieldType extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+    // Define the field properties for the field type.
     $properties['value'] = DataDefinition::create('string')->setLabel(t("Name"));
 
     return $properties;

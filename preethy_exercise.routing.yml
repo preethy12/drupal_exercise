@@ -22,7 +22,8 @@ config.custom:                                                      #route named
   requirements:
     _permission: 'permission for config form'                       #users should have this permission to access the content.
   options:
-    _admin_route: TRUE
+    _admin_route: TRUE                                              #only authorized users can access and modify administrative settings.
+
 
 dependent.form:
   path: '/dropdown'
@@ -55,3 +56,20 @@ preethy_exercise.dynamic_demo: # machine name for route to uniquely identify the
     parameters: #defines the parameters expected by the route.
       node:
         type: entity:node
+
+custom-modal-page:
+  path: '/modal-form-link'
+  defaults:
+    _controller: '\Drupal\preethy_exercise\Controller\CustomModalLink::modalLink'
+    _title: 'Open modal page'
+  requirements:
+    _permission: 'access content'
+
+
+preethy_exercise.Help-text_form:                                       #route named
+  path: "/help-text"                                         #This is the URL path.
+  defaults:                                                         #when the URL is entered it will call this path
+    _form: '\Drupal\preethy_exercise\Form\HelpText'
+    _title: "get user details"                       #provides title for the page.
+  requirements:                                                     # conditions that must be met for the route to be matched
+    _permission: 'access content'

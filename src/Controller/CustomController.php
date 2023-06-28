@@ -2,6 +2,7 @@
 
 namespace Drupal\preethy_exercise\Controller;
 
+// Controller belong to class.
 // Base class for controller.
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\preethy_exercise\CustomService;

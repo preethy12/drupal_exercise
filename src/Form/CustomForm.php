@@ -46,6 +46,7 @@ class CustomForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
+    // This retrieves the service with the ID 'messenger' from the container.
     return new static(
       $container->get('messenger'),
       $container->get('database')
@@ -56,7 +57,9 @@ class CustomForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    // It returns a string representing the unique form ID.
     return 'custom_form_user_details';
+    // Form ID that will be used to uniquely identify this particular form.
   }
 
   /**
@@ -117,6 +120,8 @@ class CustomForm extends FormBase {
    */
   public function setAjaxSubmit() {
     $response = new AjaxResponse();
+    // The invoke command is used to call a specific method or
+    // function within a class and provide any necessary arguments.
     $response->addCommand(new InvokeCommand("html", 'datacheck'));
     return $response;
   }

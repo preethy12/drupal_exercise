@@ -1,8 +1,8 @@
-css_lib:
+css_lib: #unique identifier for the JS library.
   version: 1.x
   css:
     theme: #CSS file  to be included in the theme
-      CSS/style.css: {}
+      CSS/style.css: {} #This is the path to the CSS file relative theme directory.
 
 jss_lib:
   version: 1.x

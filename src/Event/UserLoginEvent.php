@@ -7,11 +7,9 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\user\UserInterface;
 
 /**
- * Event that is fired when a user logs in.
+ * Event that is triggered when a user logs in.
  */
 class UserLoginEvent extends Event {
-
-  // This makes it easier for subscribers to reliably use our event name.
   // Name of the event.The event get dispatched.
   // When the user get logged in into the system.
   const EVENT_NAME = 'preethy_exercise_user_login';
@@ -32,7 +30,11 @@ class UserLoginEvent extends Event {
    */
 
   /**
-   * From the dispatch function we will pass the account object here and set.
+   * Defining a new variable that will call account.
+   */
+
+  /**
+   * Which will hold current users objects.
    */
   public function __construct(UserInterface $account) {
 

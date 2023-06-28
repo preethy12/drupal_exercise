@@ -6,8 +6,11 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\preethy_exercise\Event\UserLoginEvent;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 // Use Drupal\Core\Entity\EntityInterface;.
 
@@ -19,15 +22,14 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 /**
  * Implements hook_form_alter().
  */
-function preethy_exercise_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-
-  // $route = \Drupal::routeMatch()->getRouteName();
-  // print_r($route);
-  // exit;
-  $data = \Drupal::service('custom_service')->getName();
-  // print_r($data);
-  // exit;
-}
+/* Function preethy_exercise_form_alter(&$form, FormStateInterface $form_state, $form_id) { */
+// $route = \Drupal::routeMatch()->getRouteName();
+// print_r($route);
+// exit;
+// $data = \Drupal::service('custom_service')->getName();
+// print_r($data);
+// exit;
+// }
 
 /**
  * Implements hook_theme().
@@ -36,6 +38,7 @@ function preethy_exercise_theme($existing, $type, $theme, $path) {
 
   return [
     'block_plugin_template' => [
+  // Lists the variable available for the template.
       'variables' => [
         'text' => "",
         'hexcode' => "",
@@ -48,8 +51,6 @@ function preethy_exercise_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_user_login().
  */
-
-use Drupal\preethy_exercise\Event\UserLoginEvent;
 
 /**
  * Instantiate event.
@@ -67,35 +68,34 @@ function preethy_exercise_user_login($account) {
  * Implements hook_page_attachments_alter().
  */
 function preethy_exercise_page_attachments_alter(array &$attachments) {
-  $route_match = \Drupal::routeMatch();
-  $route_name = $route_match->getRouteName();
+$route_match = \Drupal::routeMatch();
 
-  // Check if the current route is admin.content.comment.
-  if ($route_name === 'comment.admin') {
-    // Modify or add attachments as needed.
-    $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
+$route_name = $route_match->getRouteName();
 
-  }
-  // For view node.
-  elseif ($route_name == 'entity.node.canonical') {
-    $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
+// Check if the current route is admin.content.comment.
+if ($route_name === 'comment.admin') {
+  // Modify or add attachments as needed.
+  $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
-  }
+}
+// For view node.
+elseif ($route_name == 'entity.node.canonical') {
+  $attachments['#attached']['library'][] = 'preethy_exercise/css_lib';
 
-  $attachments['#attached']['library'][] = 'preethy_exercise/jss_lib';
-  $attachments['#attached']['drupalSettings']['preethy_exercise']['color_test'] = "pass variable from module to js";
-  // if (in_array('custom_general/css_lib', $attachments['#attached']['library'])) {
-  //     $index = array_search('custom_general/css_lib', $attachments['#attached']['library']);
-  //     unset($attachments['#attached']['library'][$index]);
-  //   }
+}
+
+$attachments['#attached']['library'][] = 'preethy_exercise/jss_lib';
+$attachments['#attached']['drupalSettings']['preethy_exercise']['color_test'] = "pass variable from module to js";
+if (in_array('custom_general/css_lib', $attachments['#attached']['library'])) {
+  $index = array_search('custom_general/css_lib', $attachments['#attached']['library']);
+  unset($attachments['#attached']['library'][$index]);
+  // }.
 }
 
 /**
  * @file
  * Contains custom_mail.module..
  */
-
-use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
@@ -166,39 +166,96 @@ function preethy_exercise_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_view_alter().
  */
 function preethy_exercise_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  //to alter something in the build( i.e user view page)
+  // To alter something in the build( i.e user view page)
   // alter something that  already exists.
   if ($entity->getEntityTypeId() == "node") {
-      unset($build['field_image']);//image field is removed
-      $build['markup'] = [
-          '#markup' => "<h3>Testing entity view alter hook</h3>",//static text we are adding
-      ];
+    // Image field is removed.
+    unset($build['field_image']);
+    $build['markup'] = [
+    // Static text we are adding.
+      '#markup' => "<h3>Testing entity view alter hook</h3>",
+    ];
   }
 
 }
 
 /**
-* Implements hook_entity_view().
-*/
+ * Implements hook_entity_view().
+ */
 function preethy_exercise_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  // condition entity type = node
+  // Condition entity type = node
   // view-gets called before the render action takes place.
-  //performing action on node view.
+  // performing action on node view.
   $session = \Drupal::request()->getSession();
   $counts = $session->get("custom_general.node_view_count", []);
   if (!isset($counts[$entity->id()])) {
-      $counts[$entity->id()] = 1;
+    $counts[$entity->id()] = 1;
   }
   else {
-      $counts[$entity->id()]++;
+    $counts[$entity->id()]++;
   }
 
   $session->set("custom_general.node_view_count", $counts);
-$build['count'] = [
-  '#markup' => "Viewed " . $counts[$entity->id()] . " times",
-  '#cache' => [
+  $build['count'] = [
+    '#markup' => "Viewed " . $counts[$entity->id()] . " times",
+    '#cache' => [
       'max-age' => 0,
-  ],
-];
+    ],
+  ];
 
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function preethy_exercise_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == "node_article_edit_form") {
+    $helptext = \Drupal::configFactory()->getEditable("preethy_exercise.settings")->get("helptext");
+    // type: node object.
+    $node = \Drupal::routeMatch()->getParameter("node");
+    $token_service = \Drupal::token();
+    $hlptxt = $token_service->replace($helptext, ['node' => $node], ['clear' => TRUE]);
+    $form['#prefix'] = "<span>" . $hlptxt . "</span>";
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function preethy_exercise_views_pre_render(ViewExecutable $view) {
+  if ($view->id() == "demo_view" && $view->getDisplay()->display['id'] == "page_1") {
+    // exit;.
+    $view->element['#attached']['library'][] = "preethy_exercise/jss_lib";
+    $view->setTitle("our custom title");
+  }
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function preethy_exercise_views_post_render(ViewExecutable $view, array &$output, CachePluginBase $cache) {
+  if ($view->id() == "demo_view" && $view->getDisplay()->display['id'] == "page_1") {
+    // print_r(array_keys($output['#rows'][0]['#rows']));exit;.
+    unset($output['#rows'][0]['#rows'][0]);
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+
+
+// Function preethy_exercise_entity_insert(EntityInterface $entity) {
+// print_r("entity insert");
+// exit;
+// }
+// check in custom block.
+
+/**
+ * Implements hook_entity_presave().
+ */
+function preethy_exercise_node_presave($node) {
+  print_r($node->getCacheTags());
+  print_r($node->getCacheContext());
+  exit;
 }

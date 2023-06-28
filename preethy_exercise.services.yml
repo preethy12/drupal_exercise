@@ -3,14 +3,14 @@ services:
   custom_service:    # Service ID
     class: Drupal\preethy_exercise\CustomService # Class implementing the service
 
-    arguments: ['@config.factory']
+    arguments: ['@config.factory'] # Constructor arguments for the service
 
 
-  custom_events_subscriber:
-    class: '\Drupal\preethy_exercise\EventSubscriber\CustomConfigEventsSubscriber'
-    arguments: ['@database', '@messenger','@date.formatter']
-    tags:
-    - { name: 'event_subscriber' }
+  custom_events_subscriber: # service ID.Unique identifier.
+    class: '\Drupal\preethy_exercise\EventSubscriber\CustomConfigEventsSubscriber' # implements the event subscriber.
+    arguments: ['@database', '@messenger','@date.formatter'] #constructor arguments for the CustomConfigEventsSubscriber class.
+    tags: # we are defining tags for the service.
+    - { name: 'event_subscriber' } #listen to specific events dispatched by the event system and perform actions in response to those events.
 
   preethy_exercise.commands:                                        #It's a unique identifier for the service
     class: \Drupal\preethy_exercise\Commands\DrushHelpersCommands
