@@ -256,6 +256,6 @@ function preethy_exercise_views_post_render(ViewExecutable $view, array &$output
  */
 function preethy_exercise_node_presave($node) {
   print_r($node->getCacheTags());
-  print_r($node->getCacheContext());
+  print_r($node->getCacheContexts());
   exit;
 }
