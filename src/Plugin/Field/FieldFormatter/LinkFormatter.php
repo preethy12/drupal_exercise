@@ -10,11 +10,11 @@ use Drupal\Core\Form\FormStateInterface;
  * Define the  field formatter".
  *
  * @FieldFormatter(
- *   id = "Field_formatter",
+ *   id = "preethy_exercise_entity_reference_formatter",
  *   label = @Translation("Field Formatter"),
  *   description = @Translation("Desc for  Field Formatter"),
  *   field_types = {
- *     "field_type"
+ *     "entity_reference_type"
  *   }
  * )
  */
@@ -22,7 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Creates view display.
  */
-class FieldFormatter extends FormatterBase {
+class LinkFormatter extends FormatterBase {
   // It sets the 'concat' setting to 'Concat with ' as the default value.
   // It merges these settings with the default settings of the parent class.
 
@@ -57,6 +57,7 @@ class FieldFormatter extends FormatterBase {
     $summary = [];
     $summary[] = $this->t("concatenate with : @concat", ["@concat" => $this->getSetting('concat')]);
     return $summary;
+
     // Returns an array containing a single string
     // that describes the current setting value of 'concat'.
   }

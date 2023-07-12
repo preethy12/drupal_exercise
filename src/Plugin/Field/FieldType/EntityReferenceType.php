@@ -8,18 +8,17 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Define the "field type".
+ * Define the "entity_reference_type" field type.
  *
  * @FieldType(
- *   id = "field_type",
- *   label = @Translation("Field Type"),
- *   description = @Translation("Desc for Field Type"),
- *   category = @Translation("Text"),
- *   default_widget = "field_widget",
- *   default_formatter = "Field_formatter",
+ *   id = "entity_reference_type",
+ *   label = @Translation("Entity Reference Type"),
+ *   description = @Translation("Custom field type for entity references."),
+ *   category = @Translation("Reference"),
+ *    default_formatter = "custom_entity_reference_formatter",
  * )
  */
-class FieldType extends FieldItemBase {
+class EntityReferenceType extends FieldItemBase {
 
   /**
    * {@inheritdoc}
@@ -28,10 +27,13 @@ class FieldType extends FieldItemBase {
     // Define the database schema for the field type.
     return [
       'columns' => [
-        'value' => [
-          'type' => 'varchar',
-          'length' => $field_definition->getSetting("length"),
+        'target_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
         ],
+      ],
+      'indexes' => [
+        'target_id' => ['target_id'],
       ],
     ];
   }
@@ -42,7 +44,7 @@ class FieldType extends FieldItemBase {
   public static function defaultStorageSettings() {
     // Set default storage settings for the field type.
     return [
-      'length' => 255,
+      'target_type' => 'reference_entity',
     ] + parent::defaultStorageSettings();
   }
 
@@ -53,12 +55,7 @@ class FieldType extends FieldItemBase {
     // Build the form for configuring the storage settings of the field type.
     $element = [];
 
-    $element['length'] = [
-      '#type' => 'number',
-      '#title' => t("Length of your text"),
-      '#required' => TRUE,
-      '#default_value' => $this->getSetting("length"),
-    ];
+    // Add storage settings specific to your custom field type if needed.
 
     return $element;
   }
@@ -69,7 +66,7 @@ class FieldType extends FieldItemBase {
   public static function defaultFieldSettings() {
     // Set default field settings for the field type.
     return [
-      'moreinfo' => "More info default value",
+      'target_bundles' => [],
     ] + parent::defaultFieldSettings();
   }
 
@@ -79,12 +76,9 @@ class FieldType extends FieldItemBase {
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     // Build the form for configuring the field settings of the field type.
     $element = [];
-    $element['moreinfo'] = [
-      '#type' => 'textfield',
-      '#title' => 'More information about this field',
-      '#required' => TRUE,
-      '#default_value' => $this->getSetting("moreinfo"),
-    ];
+
+    // Add field settings specific to your custom field type if needed.
+
     return $element;
   }
 
@@ -93,7 +87,8 @@ class FieldType extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     // Define the field properties for the field type.
-    $properties['value'] = DataDefinition::create('string')->setLabel(t("Name"));
+    $properties['target_id'] = DataDefinition::create('integer')
+      ->setLabel(t('Target ID'));
 
     return $properties;
   }

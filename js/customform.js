@@ -20,7 +20,7 @@
             // $('#edit-temporary-address').blur(function(){
             //     alert("This input field has lost its focus.");
             //   });
-            alert();
+            //alert();
                 // Get references to the checkbox and permanent address fields
                 var checkbox = $('#edit-same-address');
                 var permanentAddressFields = $('.form-item-permanent-address');
@@ -43,14 +43,14 @@
               });
 
     };
-    Drupal.behaviors.MyModuleBehavior = {
-            attach: function(context, settings) {
-                // get color_body value with "drupalSettings.mymodule.color_body"
-                var color_body = drupalSettings.preethy_exercise.color_test;
-                alert(color_body)
-                $('body').css('background', color_body);
-            }
-        };
+    // Drupal.behaviors.MyModuleBehavior = {
+    //         attach: function(context, settings) {
+    //             // get color_body value with "drupalSettings.mymodule.color_body"
+    //             var color_body = drupalSettings.preethy_exercise.color_test;
+    //             alert(color_body)
+    //             $('body').css('background', color_body);
+    //         }
+    //     };
 
 }(jQuery, Drupal,drupalSettings));
 

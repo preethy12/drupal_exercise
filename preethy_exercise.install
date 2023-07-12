@@ -36,6 +36,24 @@ function preethy_exercise_schema() {
         'length' => 60,
         'not null' => TRUE,
       ],
+      'temporary_address' =>[
+        'description' => 'temporary user',
+        'type' => 'textfield',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'same_address' =>[
+        'description' => 'checkbox',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'permanent_address' =>[
+        'description' => 'permanent address',
+        'type' => 'textfield',
+        'length' => 60,
+        'not null' => TRUE,
+      ]
     ],
     'primary key' => ['id'],
   ];
